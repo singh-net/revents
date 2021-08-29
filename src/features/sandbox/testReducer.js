@@ -1,19 +1,41 @@
+import { toast } from 'react-toastify';
+import {
+  asyncActionError,
+  asyncActionFinish,
+  asyncActionStart,
+} from '../../app/async/asyncReducer';
+import { delay } from '../../app/common/util/util';
+
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 export const DECREMENT_COUNTER = 'DECREMENT_COUNTER';
 
-
 //reducers
 export function increment(amout) {
-  return {
-    type: INCREMENT_COUNTER,
-    payload: amout,
+  return async function (dispath) {
+    dispath(asyncActionStart());
+
+    try {
+      await delay(1000);
+      dispath({ type: INCREMENT_COUNTER, payload: amout });
+      dispath(asyncActionFinish());
+    } catch (error) {
+      dispath(asyncActionError(error));
+    }
   };
 }
 
 export function decrement(amout) {
-  return {
-    type: DECREMENT_COUNTER,
-    payload: amout,
+  return async function (dispath) {
+    dispath(asyncActionStart());
+
+    try {
+      await delay(1000);
+      dispath({ type: DECREMENT_COUNTER, payload: amout });
+      dispath(asyncActionFinish());
+    } catch (error) {
+      dispath(asyncActionError(error));
+      toast.error(error);
+    }
   };
 }
 
